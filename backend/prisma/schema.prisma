@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role{
+  ADMIN
+  CUSTOMER
+}
+
+model user{
+  id Int @id @default(autoincrement())
+  name  String
+  email String @unique
+  password  String
+  role Role @default(CUSTOMER)
+  purchases purchase[]
+  restockLog restockLog[]
+  createdAt DateTime @default(now())
+}
+
+model category{
+  id Int @id @default(autoincrement())
+  name String @unique
+  sweets sweet[]
+}
+
+model sweet{
+  id Int @id @default(autoincrement())
+  name String @unique
+  price Float
+  quantity Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  purchase purchase[]
+  restockLog restockLog[]
+  categoryId Int
+  category category @relation(fields: [categoryId],references: [id])
+}
+
+model purchase{
+  id Int @id @default(autoincrement())
+  quantity Int
+  totalPrice Float
+  purchaseAt DateTime @default(now())
+  userId Int
+  user user @relation(fields: [userId] , references: [id])
+  sweetId Int
+  sweet sweet @relation(fields: [sweetId],references: [id])
+}
+
+model restockLog{
+  id Int @id @default(autoincrement())
+  quantity Int
+  createdAt DateTime @default(now())
+  adminId Int
+  admin user @relation(fields: [adminId] , references: [id])
+  sweetId Int
+  sweet sweet @relation(fields: [sweetId],references: [id])
+}
