@@ -2,7 +2,7 @@ import request from "supertest";
 import app from "../src/app";
 import { PrismaClient } from "@prisma/client";
 
-const prisma=new PrismaClient();
+const prisma = new PrismaClient();
 
 describe("user registration api", () => {
   const userData = {
@@ -11,7 +11,7 @@ describe("user registration api", () => {
     password: "PassworD@1",
   };
 
-  let server:any;
+  let server: any;
 
   // clean db before tests
   beforeAll(async () => {
@@ -21,7 +21,7 @@ describe("user registration api", () => {
     await prisma.category.deleteMany();
     await prisma.user.deleteMany();
 
-    server=app.listen(3000,()=>{});
+    server = app.listen(3000, () => { });
   });
 
   // disconnect prisma after tests
